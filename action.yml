@@ -1,0 +1,30 @@
+name: 'Metric regression gate'
+description: 'Fail the step if current metrics regress vs baseline (tolerances in JSON config).'
+inputs:
+  baseline-file:
+    description: 'Path to baseline metrics.json (e.g. copied from main branch).'
+    required: true
+  current-file:
+    description: 'Path to current metrics.json.'
+    required: true
+  config-file:
+    description: 'Optional path to gate config JSON (see README).'
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - name: Install and run metric-gate
+      shell: bash
+      run: |
+        set -euo pipefail
+        python -m pip install --quiet "${{ github.action_path }}"
+        if [ -n "${CONFIG_FILE}" ]; then
+          metric-gate --baseline "${BASELINE}" --current "${CURRENT}" --config "${CONFIG_FILE}"
+        else
+          metric-gate --baseline "${BASELINE}" --current "${CURRENT}"
+        fi
+      env:
+        BASELINE: ${{ inputs.baseline-file }}
+        CURRENT: ${{ inputs.current-file }}
+        CONFIG_FILE: ${{ inputs.config-file }}

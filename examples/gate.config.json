@@ -1,0 +1,11 @@
+{
+  "metrics": {
+    "brier": { "path": "brier", "direction": "lower", "tolerance": 0.03 },
+    "overall_accuracy": { "path": "overall_accuracy", "direction": "higher", "tolerance": 0.02 },
+    "mean_clv": {
+      "path": "clv_summary.mean_clv_cents",
+      "direction": "higher",
+      "tolerance": 0.5
+    }
+  }
+}

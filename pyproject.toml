@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "metric-regression-gate"
+version = "0.1.0"
+description = "Fail CI when model metrics regress vs a baseline metrics.json (tolerance per metric)"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "Ian Alloway" }]
+keywords = ["ml", "ci", "metrics", "regression", "github-actions"]
+
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "ruff>=0.3"]
+
+[project.scripts]
+metric-gate = "metric_gate.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["metric_gate"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
