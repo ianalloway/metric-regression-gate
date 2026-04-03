@@ -9,6 +9,8 @@
 
 Default rules (no config): `brier` (lower, +0.03 slack) and `overall_accuracy` (higher, −0.03 slack). Pass **`examples/gate.config.json`** to add dotted paths like `clv_summary.mean_clv_cents`.
 
+If you generate reports with [`backtest-report-gen`](https://github.com/ianalloway/backtest-report-gen), its `metrics.json` shape drops straight into this gate.
+
 ```bash
 pip install -e .
 metric-gate --baseline metrics.main.json --current metrics.json
