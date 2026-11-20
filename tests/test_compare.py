@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from metric_gate.compare import compare, load_config, load_json
 from metric_gate.cli import main
+from metric_gate.compare import compare, load_config, load_json
 
 
 def base_metrics() -> dict:
@@ -67,3 +67,20 @@ def test_cli_fails(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     with pytest.raises(SystemExit) as e:
         main()
     assert e.value.code == 1
+
+@pytest.mark.parametrize("value", [float("nan"), "NaN", float("inf"), False, None])
+def test_invalid_metric_is_rejected(value):
+    with pytest.raises(ValueError, match="finite number"):
+        compare(base_metrics(), {**base_metrics(), "brier": value}, load_config(None))
+
+
+@pytest.mark.parametrize("metrics", [{}, {"brier": None}, {"brier": {"tolerance": -1}},
+                                      {"brier": {"tolerance": "Infinity"}}])
+def test_invalid_rules_cannot_pass(metrics):
+    with pytest.raises(ValueError):
+        compare(base_metrics(), base_metrics(), {"metrics": metrics})
+
+
+def test_numeric_strings_and_exact_tolerance():
+    config = {"metrics": {"score": {"direction": "higher", "tolerance": 0.25}}}
+    assert compare({"score": "1"}, {"score": 0.75}, config) == []

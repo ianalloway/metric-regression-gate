@@ -17,6 +17,8 @@ metric-gate --baseline metrics.main.json --current metrics.json
 metric-gate --baseline metrics.main.json --current metrics.json --config examples/gate.config.json
 ```
 
+A successful comparison exits 0. A regression exits 1. Invalid files, missing metric paths, empty rules, and non-finite numbers exit 2. Tolerances must be finite and non-negative.
+
 ## GitHub Actions (composite)
 
 In your repo workflow:

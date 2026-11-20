@@ -16,10 +16,13 @@ def main() -> None:
     p.add_argument("--config", type=Path, default=None, help="Gate config JSON (optional)")
     args = p.parse_args()
 
-    b = load_json(args.baseline)
-    c = load_json(args.current)
-    cfg = load_config(args.config)
-    violations = compare(b, c, cfg)
+    try:
+        b = load_json(args.baseline)
+        c = load_json(args.current)
+        cfg = load_config(args.config)
+        violations = compare(b, c, cfg)
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        p.exit(2, f"metric-regression-gate: {error}\n")
     if violations:
         print("metric-regression-gate: FAILED", file=sys.stderr)
         for v in violations:
